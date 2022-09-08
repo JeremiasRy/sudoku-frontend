@@ -1,6 +1,6 @@
 
-export function SudokuTable({sudoku, onChange, lookingForCoordinates, getCorrectValue}) {
-    if (lookingForCoordinates) {
+export function SudokuTable({sudoku, onChange, gettingSquare, getCorrectValue}) {
+    if (gettingSquare) {
         return (
             <div className="Sudoku">
             {sudoku.map(square => 

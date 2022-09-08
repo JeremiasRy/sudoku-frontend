@@ -1,4 +1,5 @@
-export function Buttons({solve, solved, clear, randomSudoku, check, setGettingCoordinates, showDifficulty, setShowDifficulty, showOptions, setShowOptions}) {
+export function Buttons({solve, solved, clear, randomSudoku, check, setGettingSquare, showDifficulty, setShowDifficulty, showOptions, setShowOptions, loading}) {
+    
     const handleClick = (event) => {
         randomSudoku(event.target.value)
         setShowOptions(!showOptions)
@@ -11,25 +12,29 @@ export function Buttons({solve, solved, clear, randomSudoku, check, setGettingCo
         setShowDifficulty(true);
     }
     const handleSolveSquareClick = () => {
-        setGettingCoordinates(true)
+        setGettingSquare(true)
         setShowOptions(true);
         setShowDifficulty(false);
     }
     const handleBackClick = () => {
         setShowOptions(false);
-        setGettingCoordinates(false);
+        setGettingSquare(false);
     }
 
     return (
         <div className="Buttons">
             {showOptions === false ? 
-            <>
-            <button onClick={solve}>Solve</button>
-            <button onClick={check}>Check</button>
-            <button onClick={handleSolveSquareClick}>Give one correct value</button>
-            <button onClick={handleRandomClick}>Get A Random Sudoku</button>
-            <button onClick={clear}>Clear</button>
-            </> : 
+            loading 
+            ? <h3 style={{textAlign: "center"}}>Loading...</h3>
+            : <>
+                <h3 style={{textAlign: "center"}}>What do you want to do?</h3>
+                <button onClick={solve}>Solve</button>
+                <button onClick={check}>Check</button>
+                <button onClick={handleSolveSquareClick}>Give one correct value</button>
+                <button onClick={handleRandomClick}>Get A Random Sudoku</button>
+                <button onClick={clear}>Clear</button>
+              </>
+            : 
             showDifficulty === true ?
             <>
             <h3 style={{textAlign: "center"}}>How difficult?</h3>
@@ -42,6 +47,7 @@ export function Buttons({solve, solved, clear, randomSudoku, check, setGettingCo
             <h3>Click on the square you want to know</h3>
             <button onClick={handleBackClick}>back</button>
             </>}
+            
             
         </div>
     )

@@ -104,17 +104,18 @@ h1 {
   text-align: center;
   border-style: none;
   font-size: 30px;
-  width: 36px;
-  height: 38px;
+  width: 32px;
+  height: 36px;
 }
 input:focus {
   outline: none;
 }
-.InCorrectSquare {
-  border: none;
+
+.InCorrectSquare input {
+  background-color: antiquewhite
 }
-.InCorrectSquare input{
-  background-color: crimson;
+.InCorrectSquare {
+  background-color: antiquewhite
 }
 
 div.HasNoValue:hover {
