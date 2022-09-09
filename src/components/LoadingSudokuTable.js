@@ -5,7 +5,6 @@ export function LoadingSudokuTable({originalSudoku, squareToLoadIndex}) {
 
     const [sudoku, setSudoku] = useState(originalSudoku);
     const [index, setIndex] = useState(0);
-    console.log(squareToLoadIndex);
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
@@ -33,8 +32,7 @@ export function LoadingSudokuTable({originalSudoku, squareToLoadIndex}) {
 
     return (
         <>
-
-        <div className="Sudoku">
+        <div className="Sudoku" id="LoadingTable">
             {sudoku.map(square => 
             <div>
                 {square === 0 ? " " : square}

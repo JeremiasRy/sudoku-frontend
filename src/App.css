@@ -34,10 +34,10 @@ h1 {
 
 .SudokuHolder {
   display: flex;
-  justify-content: center;
   position: absolute;
+  justify-content: center;
   top: 20%;
-  width: 1000px;
+  width: fit-content;
   height: 600px;
 }
 
@@ -49,6 +49,14 @@ h1 {
   height: fit-content;
   display: flex;
   flex-wrap: wrap;
+  animation: origGrow 2s;
+}
+
+.Sudoku#Solved {
+  animation: grow 2s;
+}
+.Sudoku#LoadingTable {
+  animation: none;
 }
 
 .Sudoku div.BorderVerticalFirst {
@@ -120,4 +128,19 @@ input:focus {
 
 div.HasNoValue:hover {
   background-color: antiquewhite;
+}
+
+@keyframes grow {
+  0% {
+    transform: translateX(-50%);
+  } 100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes origGrow {
+  0% {
+    transform: translateX(50%);
+  } 100% {
+    transform: translateX(0%);
+  }
 }

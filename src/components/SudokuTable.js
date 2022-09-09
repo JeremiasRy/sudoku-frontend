@@ -1,5 +1,6 @@
 
-export function SudokuTable({sudoku, onChange, gettingSquare, getCorrectValue}) {
+export function SudokuTable({sudoku, solvedSudoku, onChange, gettingSquare, getCorrectValue}) {
+    console.log(sudoku);
     if (gettingSquare) {
         return (
             <div className="Sudoku">
@@ -20,15 +21,10 @@ export function SudokuTable({sudoku, onChange, gettingSquare, getCorrectValue}) 
     } else {
         return (
             <>
-            <div className="Sudoku">
-                {sudoku.map(square => 
-                <div key={square.index} id={square.index}>
-                {!onChange 
-                ? <>{square.value}</>
-                : <input type="text" autoComplete="off" id={square.index} onChange={onChange} value={sudoku[square.index].value === 0 ? "" : sudoku[square.index].value} />}
-                </div>
-                )}
-                    
+            <div className="Sudoku" id={solvedSudoku !== undefined ? "Solved" : ""}>
+                {solvedSudoku !== undefined  
+                ? solvedSudoku.map(square => <div id={square.index} key={square.index}>{sudoku[square.index].value === 0 ? <b>{square.value}</b> : square.value}</div>) 
+                : sudoku.map(square => <div id={square.index} key={square.index}><input type="text" id={square.index} onChange={onChange} value={sudoku[square.index].value === 0 ? "" : sudoku[square.index].value}></input></div>)}
                 <div className="BorderVerticalFirst"/>
                 <div className="BorderVerticalSecond"/>
                 <div className="BorderHorizontalFirst"/>

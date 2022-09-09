@@ -52,6 +52,7 @@ function App() {
   },[])
 
   const onChange = (event) => {
+    console.log(event.target.value)
     var eventSquare;
     if (event.target.value === "") {
         eventSquare = new Square(0, parseInt(event.target.id))
@@ -62,6 +63,7 @@ function App() {
         return;
     }
     eventSquare = new Square(parseInt(event.target.value), parseInt(event.target.id))
+    console.log(eventSquare);
     setSudoku(sudoku.map(square => square.index === eventSquare.index ? eventSquare : square))
 }
 
@@ -142,7 +144,7 @@ const getCorrectValue = async (index) => {
       getCorrectValue={getCorrectValue}/> 
     : <SudokuTable sudoku={sudoku} onChange={onChange}/>}
 
-    {solved && <SudokuTable sudoku={solvedSudoku} />}
+    {solvedSudoku !== null && <SudokuTable sudoku={sudoku} solvedSudoku={solvedSudoku} />}
     </div>
     <Buttons 
     loading={loading}
