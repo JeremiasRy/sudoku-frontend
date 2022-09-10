@@ -49,11 +49,16 @@ h1 {
   height: fit-content;
   display: flex;
   flex-wrap: wrap;
-  animation: origGrow 2s;
 }
 
+.Sudoku#Initial {
+  animation: slidein 2s;
+}
 .Sudoku#Solved {
-  animation: grow 2s;
+  animation: slide 2s;
+}
+.Sudoku#SolvedOrig {
+  animation: origSlide 2s;
 }
 .Sudoku#LoadingTable {
   animation: none;
@@ -129,18 +134,37 @@ input:focus {
 div.HasNoValue:hover {
   background-color: antiquewhite;
 }
-
-@keyframes grow {
+.notification {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  animation: fromBelow 1s;
+}
+@keyframes fromBelow{
+  from {
+    transform: translateY(400%);
+  } to {
+    transform: translateY(0%);
+  }
+}
+@keyframes slide {
   0% {
     transform: translateX(-50%);
   } 100% {
     transform: translateX(0%);
   }
 }
-@keyframes origGrow {
+@keyframes origSlide {
   0% {
     transform: translateX(50%);
   } 100% {
     transform: translateX(0%);
+  }
+}
+@keyframes slidein {
+  0% {
+    transform: scale(0) rotate(180deg);
+  } 100% {
+    transform: scale(1) rotate(0deg);
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { SudokuBorders } from "./SudokuBorders";
 
 export function LoadingSudokuTable({originalSudoku, squareToLoadIndex}) {
 
@@ -9,27 +10,22 @@ export function LoadingSudokuTable({originalSudoku, squareToLoadIndex}) {
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
-
-    function moveAround() {
-        const newSudoku = [...originalSudoku]
-        if (squareToLoadIndex !== null) {
-            newSudoku[squareToLoadIndex] = Math.floor(Math.random() * 8) + 1 
-        } else {
-            setIndex(index + 1)
-            if (index > 79) {
-                setIndex(0)
-            }
-            newSudoku[index] = Math.floor(Math.random() * 8) + 1 
-            newSudoku[newSudoku.length - index - 1] = Math.floor(Math.random() * 8) + 1
-        }
-        setSudoku(newSudoku)
-    }
-
     useEffect(() => {
-        sleep(100).then(moveAround)
-    }, [sudoku])
-
-
+        const newSudoku = [...originalSudoku]
+        sleep(100).then(() => {
+            if (squareToLoadIndex !== null) {
+                newSudoku[squareToLoadIndex] = Math.floor(Math.random() * 8) + 1 
+            } else {
+                setIndex(index + 1)
+                if (index > 79) {
+                    setIndex(0)
+                }
+                newSudoku[index] = Math.floor(Math.random() * 8) + 1 
+                newSudoku[newSudoku.length - index - 1] = Math.floor(Math.random() * 8) + 1
+            }
+            setSudoku(newSudoku)
+        })
+    })
     return (
         <>
         <div className="Sudoku" id="LoadingTable">
@@ -38,10 +34,7 @@ export function LoadingSudokuTable({originalSudoku, squareToLoadIndex}) {
                 {square === 0 ? " " : square}
             </div>
             )} 
-            <div className="BorderVerticalFirst"/>
-            <div className="BorderVerticalSecond"/>
-            <div className="BorderHorizontalFirst"/>
-            <div className="BorderHorizontalSecond"/>
+            <SudokuBorders />
         </div>
         </>  
     )

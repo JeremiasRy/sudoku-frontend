@@ -4,6 +4,7 @@ import { Buttons } from "./components/Buttons";
 import { SudokuTable } from './components/SudokuTable';
 import SudokuService from './services/SudokuService';
 import { LoadingSudokuTable } from './components/LoadingSudokuTable';
+import { Notification } from './components/Notification';
 
 
 function App() {  
@@ -15,13 +16,6 @@ function App() {
           sudokuArr[i] = square;
       }
     return sudokuArr;
-  }
-  const arrayOfZeros = () => {
-    var arr = [];
-    for (let i = 0; i < 81; i++) {
-      arr.push(0)
-    }
-    return arr;
   }
 
   const fillSudokuSquares = (sudokuArr) => {
@@ -41,18 +35,19 @@ function App() {
   const [index, setIndex] = useState(null)
   const [sudoku, setSudoku] = useState(new Array(81))
   const [solvedSudoku, setSolvedSudoku] = useState(null)
-  const [solved, setSolved] = useState(false)
   const [gettingSquare, setGettingSquare] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
   const [showDifficulty, setShowDifficulty] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [initial, setInitial] = useState(true)
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
         setSudoku(emptySudoku)
   },[])
 
   const onChange = (event) => {
-    console.log(event.target.value)
+    setInitial(false)
     var eventSquare;
     if (event.target.value === "") {
         eventSquare = new Square(0, parseInt(event.target.id))
@@ -63,24 +58,34 @@ function App() {
         return;
     }
     eventSquare = new Square(parseInt(event.target.value), parseInt(event.target.id))
-    console.log(eventSquare);
     setSudoku(sudoku.map(square => square.index === eventSquare.index ? eventSquare : square))
 }
 
 const solve = async () => {
+  setInitial(false)
   setLoading(true)
   await SudokuService.SolveSudoku(sudoku.map(square => square.value).join(",")).then(response => {
     setLoading(false)
     setSolvedSudoku(fillSudokuSquares(response.sudoku));
-    setSolved(true);
+    setNotification("Solved!")
+    setTimeout(() => setNotification(null), 2000)
+  }).catch(() => {
+    setLoading(false);
+    check();
+    setNotification("Sudoku is impossible to solve")
+    setTimeout(() => setNotification(null), 2000)
   })
 
 }
 
-const clear = () => {
-  setSolved(false);
+const clear = (fromSolved) => {
+  setInitial(false);
   setSolvedSudoku(null);
-  setSudoku(emptySudoku);
+  if (fromSolved) {
+    return;
+  } else if (fromSolved === undefined){
+    setSudoku(emptySudoku);
+  }
 }
 
 const clearCheck = () => {
@@ -90,15 +95,19 @@ const clearCheck = () => {
 }
 
 const randomSudoku = async (difficulty) => {
+  setInitial(false);
   setLoading(true);
   await SudokuService.GetRandomSudoku(difficulty).then(response => {
     setSudoku(fillSudokuSquares(response.sudoku));
     setLoading(false);
+    setNotification("Happy solving!")
+    setTimeout(() => setNotification(null, 2000))
   });
   
 }
 
 const check = async () => {
+  setInitial(false);
   await SudokuService.GetIncorrectSquares(sudoku.map(square => square.value).join(",")).then(response => {
     for (let i = 0; i < response.length; i++) {
       let element = document.getElementById(response[i])
@@ -110,6 +119,7 @@ const check = async () => {
 }
 
 const getCorrectValue = async (index) => {
+  setInitial(false)
   setLoading(true)
   setIndex(index)
   await SudokuService.GetCorrectSquare(index, sudoku.map(square => square.value).join(",")).then(response => {
@@ -119,17 +129,18 @@ const getCorrectValue = async (index) => {
   setSudoku(fillSudokuSquares(response.sudoku))
   setLoading(false)
   setIndex(null)}
-);
+).catch(() => {
+  setLoading(false);
+  check();
+  setNotification("Sudoku is impossible to solve")
+  setTimeout(() => setNotification(null), 2000)
+});
 }
-
-
   return (
   <>
   <div className='TopNavBar'>
     <div className='Header'>
       <h1>Sudoku</h1>
-    </div>
-    <div className='Buttons'>
     </div>
   </div>
   <div className='Content'>
@@ -142,14 +153,14 @@ const getCorrectValue = async (index) => {
       gettingSquare={gettingSquare} 
       setGettingSquare={setGettingSquare} 
       getCorrectValue={getCorrectValue}/> 
-    : <SudokuTable sudoku={sudoku} onChange={onChange}/>}
+    : <SudokuTable sudoku={sudoku} onChange={onChange} solvedSudoku={solvedSudoku} initial={initial}/>}
 
     {solvedSudoku !== null && <SudokuTable sudoku={sudoku} solvedSudoku={solvedSudoku} />}
     </div>
     <Buttons 
     loading={loading}
     solve={solve} 
-    solved={solved} 
+    solved={solvedSudoku !== null} 
     clear={clear} 
     randomSudoku={randomSudoku} 
     check={check} 
@@ -159,6 +170,7 @@ const getCorrectValue = async (index) => {
     showDifficulty={showDifficulty}
     setShowDifficulty={setShowDifficulty}/>
   </div>
+  <Notification notification={notification}/>
   </>
   );
 }
